@@ -1,5 +1,5 @@
 let meats = 0;
-let timeleft = 1;
+let timeleft = 30;
 let count = $('.count');
 let timer = $('#timer');
 
