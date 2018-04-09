@@ -1,5 +1,5 @@
 let meats = 0;
-let timeleft = 30;
+let timeleft = 20;
 let count = $('.count');
 let timer = $('#timer');
 
@@ -28,11 +28,15 @@ Enemy.prototype.update = function(dt) {
     } else {
         this.x = -100;
     };
-    //check if enemy and player collides. https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
-    if (player.x < this.x + 50 && player.x + 50 > this.x && player.y < this.y + 50 && player.y + 50 > this.y) {
-        resetPlayer();
-    };
+    this.checkCollisions();
 };
+
+//check if enemy and player collides. https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+Enemy.prototype.checkCollisions = function() {
+    if (player.x < this.x + 95 && player.x + 95 > this.x && player.y < this.y + 50 && player.y + 50 > this.y) {
+        player.reset();
+    };
+}
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -58,26 +62,30 @@ Player.prototype.update = function() {
     if (this.y > 390) {
         this.y = 390;
     };
-
     if (this.y < -20) {
         this.y = -20;
     };
-    //player needs to touch the dog in order to earn point & win. point++ and reset its place.
+    this.touchMomo();
+};
+
+//player needs to touch the dog in order to earn point & win. Once they touch, point++ and player resets its place.
+Player.prototype.touchMomo = function() {
     if (this.x < dog.x + 30 && this.x + 30 > dog.x && this.y < dog.y + 30 && this.y + 30 > dog.y) {
         //update the number of meats the dog get
         meats++;
-        count.text(meats);
-        resetPlayer();
-        if (meats === 10) {
+        count.text(meats);        
+        player.reset();
+        if (meats === 10 || timeleft === 0) {
             togglePopup();
+            timesUp();
         }
     };
-};
+}
 
 //reset player's position
-function resetPlayer() {
-    player.x = 200;
-    player.y = 310;
+Player.prototype.reset = function () {
+    this.x = 200;
+    this.y = 310;
 }
 
 Player.prototype.render = function() {
@@ -101,6 +109,7 @@ Dog.prototype.render = function() {
 const allEnemies = [
     new Enemy(-60, 50),
     new Enemy(-80, 130),
+    new Enemy(-100, 130),
     new Enemy(-50, 210),
 ];
 const player = new Player(200, 310);
@@ -134,7 +143,6 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
@@ -145,8 +153,31 @@ const countDown = setInterval(function() {
     if (timeleft <= 0) {
         clearInterval(countDown);
         togglePopup();
+        timesUp();
     }
 }, 1000);
+
+//change Momo's image based on #of meat
+const changeEmotion = function() {
+    if (meats >= 0 && meats < 5) {
+        $('#congra-mesg').text('Uh Oh ——');
+        $('#emotion img').attr('src', 'images/sad-dog.png')
+    } else if (meats >= 5 && meats <= 7) {
+        $('#congra-mesg').text('YAWN~~~~');
+        $('#emotion img').attr('src', 'images/yawn-dog.png')
+    } else {
+        $('#congra-mesg').text('AWESOME');
+        $('#emotion img').attr('src', 'images/happy-dog.png')
+    };
+};
+
+//change timer's text
+const timesUp = function() {
+    if (togglePopup) {
+        timer.text('Time\'s Up');
+        clearInterval(countDown);
+    };
+};
 
 //overlay popup http://dev.vast.com/jquery-popup-overlay/
 $('#standalone').popup({
@@ -154,18 +185,21 @@ $('#standalone').popup({
 	opacity: 1,
 	transition: '0.3s',
 	scrolllock: true
-  });
+});
 
-//toggle popup window
+/*toggle popup window
+this popup contains info about how many meat Momo got, a replay button and a close popup button
+*/
 function togglePopup() {
+    changeEmotion();
     $('#standalone').popup('show');
     $('#play-again').on('click', function() {
 		reset();
-	})
+	});
 	$('#close-popup').on('click', function() {
 		$('#standalone').popup('hide');
 	});
-}
+};
 
 /* reset the game */  
 function reset() {
