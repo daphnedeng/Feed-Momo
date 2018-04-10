@@ -86,7 +86,7 @@ Player.prototype.touchMomo = function() {
 
 //reset player's position
 Player.prototype.reset = function() {
-    this.x = 200;
+    this.x = 300;
     this.y = 310;
 }
 
