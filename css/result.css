@@ -8,9 +8,14 @@ body {
 }
 
 #timer {
-    width: 50%;
+    width: 45%;
     float: right;
     margin-top: 0.3em;
+    cursor: pointer;
+}
+
+#material-icons {
+    width: 5%;
 }
 
 .count {

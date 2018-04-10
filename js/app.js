@@ -182,8 +182,11 @@ const changeEmotion = function() {
 //change timer's text
 const timesUp = function() {
     if (togglePopup) {
-        timer.text('Time\'s Up');
+        timer.text('Time\'s Up ⟳');
         clearInterval(countDown);
+        timer.on('click', function() {
+            reset();
+        })
     };
 };
 
