@@ -2,6 +2,7 @@ let meats = 0;
 let timeleft = 20;
 let count = $('.count');
 let timer = $('#timer');
+let enable = true;
 
 // Enemies our player must avoid
 let Enemy = function(x ,y) {
@@ -23,7 +24,7 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    if (this.x < 505) {
+    if (this.x < 707) {
         this.x += this.speed * dt;
     } else {
         this.x = -100;
@@ -53,11 +54,11 @@ let Player = function(x, y) {
 //update the player's position
 Player.prototype.update = function() {
     //the player can't move over the canvas
-    if (this.x > 405) {
+    if (this.x > 606) {
         this.x = 0;
     };
     if (this.x < 0) {
-        this.x = 405;
+        this.x = 606;
     };
     if (this.y > 390) {
         this.y = 390;
@@ -70,11 +71,12 @@ Player.prototype.update = function() {
 
 //player needs to touch the dog in order to earn point & win. Once they touch, point++ and player resets its place.
 Player.prototype.touchMomo = function() {
-    if (this.x < dog.x + 30 && this.x + 30 > dog.x && this.y < dog.y + 30 && this.y + 30 > dog.y) {
+    if (this.x < dog.x + 60 && this.x + 60 > dog.x && this.y < dog.y + 30 && this.y + 30 > dog.y) {
         //update the number of meats the dog get
         meats++;
         count.text(meats);        
         player.reset();
+        dog.reset();
         if (meats === 10 || timeleft === 0) {
             togglePopup();
             timesUp();
@@ -83,7 +85,7 @@ Player.prototype.touchMomo = function() {
 }
 
 //reset player's position
-Player.prototype.reset = function () {
+Player.prototype.reset = function() {
     this.x = 200;
     this.y = 310;
 }
@@ -99,6 +101,12 @@ let Dog = function(x, y) {
     this.y = y;
 };
 
+//update dog's position
+Dog.prototype.reset = function() {
+    this.x = Math.floor(Math.random()*580);
+    this.y = 0;
+}
+
 Dog.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -107,13 +115,13 @@ Dog.prototype.render = function() {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 const allEnemies = [
-    new Enemy(-60, 50),
-    new Enemy(-80, 130),
-    new Enemy(-100, 130),
-    new Enemy(-50, 210),
+    new Enemy(-120, 50),
+    new Enemy(-155, 130),
+    new Enemy(-250, 130),
+    new Enemy(-180, 210),
 ];
-const player = new Player(200, 310);
-const dog = new Dog(92, 0);
+const player = new Player(300, 310);
+const dog = new Dog(300, 0);
 
 //This handleInput method moves the player's position bese on which arrow key is press.
 Player.prototype.handleInput = function(arrowKey) {
@@ -191,14 +199,18 @@ $('#standalone').popup({
 this popup contains info about how many meat Momo got, a replay button and a close popup button
 */
 function togglePopup() {
-    changeEmotion();
-    $('#standalone').popup('show');
-    $('#play-again').on('click', function() {
-		reset();
-	});
-	$('#close-popup').on('click', function() {
-		$('#standalone').popup('hide');
-	});
+    if (enable) {
+        changeEmotion();
+        $('#standalone').popup('show');
+        $('#play-again').on('click', function() {
+            reset();
+        });
+        $('#close-popup').on('click', function() {
+            $('#standalone').popup('hide');
+            //prevent popup keeps showing up after it shows up once and the user click "nah"
+            enable = false;
+        });
+    }
 };
 
 /* reset the game */  
