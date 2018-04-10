@@ -26,11 +26,15 @@ body {
 
 /* pop up http://dev.vast.com/jquery-popup-overlay/ */
 #standalone {
-    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+        -ms-transform: scale(0.8);
+            transform: scale(0.8);
 }
 
 .popup_visible #standalone {
-    transform: scale(1);
+    -webkit-transform: scale(1);
+        -ms-transform: scale(1);
+            transform: scale(1);
 }
 
 /* 
