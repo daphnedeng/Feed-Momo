@@ -2,20 +2,16 @@ body {
     font-family: 'Hi Melody', cursive;
 }
 
-#headings {
+.headline {
     width: 505px;
     margin: 1em auto;
 }
 
-#timer {
+.timer {
     width: 45%;
     float: right;
     margin-top: 0.3em;
     cursor: pointer;
-}
-
-#material-icons {
-    width: 5%;
 }
 
 .count {
@@ -25,13 +21,13 @@ body {
 }
 
 /* pop up http://dev.vast.com/jquery-popup-overlay/ */
-#standalone {
+.standalone {
     -webkit-transform: scale(0.8);
         -ms-transform: scale(0.8);
             transform: scale(0.8);
 }
 
-.popup_visible #standalone {
+.popup_visible .standalone {
     -webkit-transform: scale(1);
         -ms-transform: scale(1);
             transform: scale(1);
@@ -92,11 +88,11 @@ main button block */
     color: #8b8b8b;    
 }
 
-#summary {
+.summary {
     float: left;
 }
 
-#emotion {
+.emotion {
     float: right;
     position: relative;
     left: 30px;
